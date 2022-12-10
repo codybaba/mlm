@@ -6,12 +6,12 @@
 
     
 
-    if(isset($_SESSION['user_email']) && $_SESSION['user_email'] == true ){
+    if(isset($_SESSION['user']) && $_SESSION['user'] == true ){
         header("Location: dashboard/index.php"); 
     }else {
         
         if (isset($_POST['login'])){
-            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $phone_no = mysqli_real_escape_string($conn, $_POST['phone_no']);
             $password = mysqli_real_escape_string($conn, $_POST['password']);
             // $remember = mysqli_real_escape_string($conn, $_POST['remember']);
     
@@ -23,7 +23,7 @@
     
             // }
             //login function call
-            user_login($email, $password);
+            user_login($phone_no, $password);
         }
     }
 
@@ -50,7 +50,7 @@
             <div class="mt-10">
                 <form action="" method="post">
                     <div class="flex flex-col mb-6">
-                        <label for="email" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">E-Mail Address:</label>
+                        <label for="phone_no" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">Mobile number:</label>
                         <div class="relative">
                             <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,7 +58,7 @@
                                 </svg>
                             </div>
 
-                            <input id="email" type="email" name="email" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="E-Mail Address" />
+                            <input id="phone_no" type="text" name="phone_no" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Mobile number" />
                         </div>
                     </div>
                     <div class="flex flex-col mb-6">

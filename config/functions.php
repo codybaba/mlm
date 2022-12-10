@@ -756,22 +756,22 @@ include 'db_connect.php';
 
 
 
-    function user_signup($name, $email, $password, $ref_id, $sponser_id, $ref_income) {
+    function user_signup($name, $phone_no, $email, $password, $ref_id, $sponser_id, $ref_income) {
 
         global $conn;
 
-        $sql = "SELECT * FROM user WHERE email = '$email'";
+        $sql = "SELECT * FROM user WHERE phone_no = '$phone_no' || email = '$email'";
         $result= mysqli_query($conn, $sql);
         $num = mysqli_num_rows($result);
 
         if($num > 0){
-            echo "<script>alert('Username is already exist!')</script>";
+            echo "<script>alert('Mobile number or Email is already exist!')</script>";
             // $_SESSION['status'] = "Username is already exist!";
             // $_SESSION['status_code'] = "warning";
         }else {
 
-            $sql = "INSERT INTO user(name, email, password, ref_id, sponser_id, ref_income)
-            VALUES ('$name', '$email', '$password', '$ref_id', '$sponser_id', '$ref_income')";
+            $sql = "INSERT INTO user(name, phone_no, email, password, ref_id, sponser_id, ref_income)
+            VALUES ('$name', '$phone_no', '$email', '$password', '$ref_id', '$sponser_id', '$ref_income')";
 
             $res = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 
@@ -787,18 +787,18 @@ include 'db_connect.php';
         }
     }
 
-    function user_login($email, $password) {
+    function user_login($phone_no, $password) {
 
         global $conn;
     
-        $sql = "SELECT email, password FROM user WHERE email = '$email' && password = '$password'";
+        $sql = "SELECT phone_no, password FROM user WHERE phone_no = '$phone_no' && password = '$password'";
     
             $res = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $count = mysqli_num_rows($res);
             if($count > 0){
     
                 //created user session
-                $_SESSION['user_email'] = $email;
+                $_SESSION['user'] = $phone_no;
                 
                 header('Location: ./dashboard/index.php');
                 // echo "Successfully logged in";
@@ -833,8 +833,8 @@ include 'db_connect.php';
         global $conn;
 
         //get current user
-        $user_email = $_SESSION['user_email'];
-        $user_query = "SELECT * FROM user WHERE email = '$user_email'";
+        $user = $_SESSION['user'];
+        $user_query = "SELECT * FROM user WHERE phone_no = '$user'";
         $user_res = mysqli_query($conn, $user_query);
 
         return $user_res;

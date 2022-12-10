@@ -4,7 +4,7 @@
     include_once('./config/functions.php');
 
 
-    if(isset($_SESSION['user_email']) && $_SESSION['user_email'] == true ){
+    if(isset($_SESSION['user']) && $_SESSION['user'] == true ){
         header("Location: index.php"); 
     }else {
 
@@ -16,8 +16,8 @@
         }
         
 
-        $name = $password = $email = '';
-        $errors = array('name' => '', 'password' => '', 'email' => '')  ;
+        $name = $password = $email = $phone_no = '';
+        $errors = array('name' => '', 'password' => '', 'email' => '', 'phone_no' => '');
     
         if (isset($_POST['register'])){
 
@@ -27,6 +27,15 @@
                 $fullname = $_POST['name'];
                 if(!preg_match('/^[a-zA-Z\s]+$/', $fullname)){
                     $errors['name'] = 'Name must be letters.';
+                }
+            }
+
+            if(empty($_POST['phone_no'])){
+                $errors['phone_no'] = 'Mobile number is required.';
+            }else {
+                $phone_no = $_POST['phone_no'];
+                if(!preg_match('/^[0-9]{10}+$/', $phone_no)){
+                    $errors['phone_no'] = 'Mobile number must be 10 digits.';
                 }
             }
     
@@ -53,6 +62,7 @@
     
             }else {
                 $name = mysqli_real_escape_string($conn, $_POST['name']);
+                $phone_no = mysqli_real_escape_string($conn, $_POST['phone_no']);
                 $email = mysqli_real_escape_string($conn, $_POST['email']);
                 $password = mysqli_real_escape_string($conn, $_POST['password']);
                 $ref_id = str_replace(' ', '', $name) . uniqid();
@@ -60,7 +70,7 @@
                 $sponser_id = mysqli_real_escape_string($conn, $_POST['sponser_id']);
                 $ref_income = 0.0;
                 //signup function call
-                user_signup($name, $email, $password, $ref_id, $sponser_id, $ref_income);
+                user_signup($name, $phone_no, $email, $password, $ref_id, $sponser_id, $ref_income);
             }
         }
     }
@@ -98,8 +108,20 @@
                             </div>
 
                             <input id="name" type="text" name="name" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Name" required/>
-                            <div class="text-danger"><?php echo $errors['name']; ?></div>
                         </div>
+                        <div class="text-rose-700 text-xs"><?php echo $errors['name']; ?></div>
+                    </div>
+                    <div class="flex flex-col mb-6">
+                        <label for="phone_no" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">Mobile number:</label>
+                        <div class="relative">
+                            <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                                <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                                </svg>
+                            </div>
+                            <input id="phone_no" type="text" name="phone_no" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Mobile number" required/>
+                        </div>
+                        <div class="text-rose-700 text-xs"><?php echo $errors['phone_no']; ?></div>
                     </div>
                     <div class="flex flex-col mb-6">
                         <label for="email" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">E-Mail Address:</label>
@@ -111,8 +133,8 @@
                             </div>
 
                             <input id="email" type="email" name="email" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="E-Mail Address" required/>
-                            <div class="text-danger"><?php echo $errors['email']; ?></div>
                         </div>
+                        <div class="text-rose-700 text-xs"><?php echo $errors['email']; ?></div>
                     </div>
                     <div class="flex flex-col mb-6">
                         <label for="password" class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">Password:</label>
@@ -126,8 +148,8 @@
                             </div>
 
                             <input id="password" type="password" name="password" class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" placeholder="Password" required/>
-                            <div class="text-danger"><?php echo $errors['password']; ?></div>
                         </div>
+                        <div class="text-rose-700 text-xs"><?php echo $errors['password']; ?></div>
                     </div>
 
                     <!-- <div class="flex items-center mb-6 -mt-4">

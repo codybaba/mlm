@@ -2,7 +2,7 @@
     session_start();
     include('../config/db_connect.php');
     include('../config/functions.php');
-    if(!isset($_SESSION['user_email'])){
+    if(!isset($_SESSION['user'])){
         header("Location: ../login.php"); 
     }
     //get current user referral id
